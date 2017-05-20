@@ -8,13 +8,14 @@ tags: [git, vim]
 
 If you're just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
 
-## Vim/ text editors
+### Vim/ text editors
+As a .NET 
 
-## Working with configs
+### Working with configs
 
-## Syncing
+### Syncing
 
-### Thoughts
+#### Thoughts
 
 {% highlight ruby %}
 def print_hi(name)
