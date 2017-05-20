@@ -1,12 +1,21 @@
 ---
 layout: post
-title:  "How to manage your Vim config with GitHub"
+title:  "Managing Vim configs with GitHub"
 date:   2016-04-28 23:17:12 +0000
 categories: [Dev]
 tags: [git, vim]
 ---
 
-If you are just getting into customizing your Vim configurations and are not delving into plug-in management yet, this post my help you. 
+If you are just getting into customizing your Vim configurations and using Vim across multiple boxes, this post may help you. 
+
+## Vim/ text editors
+
+## Working with configs
+
+## Syncing
+
+### Thoughts
+
 {% highlight ruby %}
 def print_hi(name)
   puts "Hi, #{name}"
