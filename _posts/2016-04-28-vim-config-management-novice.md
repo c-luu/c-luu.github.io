@@ -6,7 +6,7 @@ categories: [Dev]
 tags: [git, vim]
 ---
 
-If you are just getting into customizing your Vim configurations and using Vim across multiple boxes, this post may help you. 
+If you're just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
 
 ## Vim/ text editors
 
