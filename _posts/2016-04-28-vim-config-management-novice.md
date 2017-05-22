@@ -9,7 +9,7 @@ tags: [git, vim]
 If you're just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
 
 ### Vim/ text editors
-As a .NET 
+Vim is a lightweight, [ubiquitous][vim-download] text editor that I use when I'm working on *nix boxes. 
 
 ### Working with configs
 
@@ -30,3 +30,4 @@ Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most ou
 [repo]: https://www.github.com/c-luu/dotfiles
 [jekyll-gh]:   https://github.com/jekyll/jekyll
 [jekyll-talk]: https://talk.jekyllrb.com/
+[vim-download]: https://vim.sourceforge.io/download.php
