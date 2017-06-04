@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Managing Vim configs with GitHub"
+title:  "Syncing Vim configs with GitHub"
 date:   2016-04-28 23:17:12 +0000
 categories: [Dev]
 tags: [git, vim]
