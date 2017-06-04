@@ -6,28 +6,45 @@ categories: [Dev]
 tags: [git, vim]
 ---
 
-If you're new to Vim and just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
+If you're new to Vim and interested in customizing your Vim configurations to use across multiple boxes, this post may help you. 
 
-### Vim/ text editors
-Vim is a lightweight, [ubiquitous][vim-download] text editor that I use for code and text editing.  
+### Vim the text editor
+Vim is a lightweight, [ubiquitous][vim-download] text editor for code and text editing. It's pre-installed on the majority of *nix boxes and has bindings and commands to edit text efficiently. Using Vim proves useful when I'm working in multiple boxes throughout the day, i.e., connecting to servers to debug an issue or writing Python code in a virtual machine for school assignments.
 
-### Working with configs
+### Working with configuration files (vimrc)
+Vim has a configuration file where you can have your custom plug-ins and settings defined. Since I'm relatively new to Vim and don't use plug-ins, my configuration is simple:
 
-### Syncing
+{% highlight Vimscript %}
+filetype plugin indent on
+syntax on
 
-#### Thoughts
+set relativenumber number
+set clipboard=unnamed
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+" Colors
+colorscheme elflord
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+Here, I have some convenient settings like setting [relative numbers][relative-numbers] and an alternate color-scheme.
 
-[repo]: https://www.github.com/c-luu/dotfiles
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+### Syncing
+Having my custom Vim settings on hand is helpful to avoid having to manually set configurations on each environment, so I pushed my settings to GitHub under a project called 'dotfiles'. Using [sym-links] and GitHub, we can now download our settings to any box with an internet connection.
+
+To sync, create a directory named 'vim' and move your vimrc file into this directory. Push this directory up to your GitHub account under whatever project name you decide. When you're ready to sync your settings, log into your box and follow the subsequent instructions based on what operating system you're running:
+
+#### *nix Setup
+
+1. Clone into ~/yourRepoDirectory/...
+2. Remove ~/.vim directory and ~/.vimrc 
+3. ln -s ~/yourRepoDirectory/dotfiles/vim ~/.vim 
+
+#### Windows Setup
+1. Clone into ~/yourRepoDirectory/...
+2. Remove ~/vimfiles directory and ~/\_vimfiles 
+3. ln -s ~/yourRepoDirectory/dotfiles/vim ~/vimfiles
+	1. If permission issues: [read here.](http://www.dotnetsurfers.com/blog/2013/10/15/using-the-same-vimrc-with-multiple-operating-systems)
+
 [vim-download]: https://vim.sourceforge.io/download.php
+[relative-numbers]: https://vi.stackexchange.com/questions/3/how-can-i-show-relative-numbers
+[sym-links]: https://teamtreehouse.com/community/creating-a-symbolic-link-in-windows
+
