@@ -6,10 +6,10 @@ categories: [Dev]
 tags: [git, vim]
 ---
 
-If you're just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
+If you're new to Vim and just getting into customizing your Vim configurations and using them across multiple boxes, this post may help you. 
 
 ### Vim/ text editors
-Vim is a lightweight, [ubiquitous][vim-download] text editor that I use when I'm working on *nix boxes. 
+Vim is a lightweight, [ubiquitous][vim-download] text editor that I use for code and text editing.  
 
 ### Working with configs
 
