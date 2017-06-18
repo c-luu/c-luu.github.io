@@ -10,6 +10,12 @@ tags: [pixel, virtualbox]
 * Download pixel
 * [Remove libre office]( https://askubuntu.com/questions/180403/how-to-uninstall-libreofficeafter) making a virtual box vm
 * use [nodeenv](http://ekalinin.github.io/nodeenv/)
+* write about pulling down the dotfiles after installing vim and aptitude update before that
+* steps to get project running:
+1. clone project with requirements.txt and package.json
+2. create the nodeenv
+3. download dependencies from requirements.txt nodeenv --requirements=requirements.txt --jobs=4 env
+4. run npm install to get local dependencies
 
 ### Vim the text editor
 Vim is a lightweight, [ubiquitous][vim-download] text editor for code and text editing. It's pre-installed on the majority of *nix boxes and has bindings and commands to edit text efficiently. Using Vim proves useful when I'm working in multiple boxes throughout the day, i.e., connecting to servers to debug an issue or writing Python code in a virtual machine for school assignments.
