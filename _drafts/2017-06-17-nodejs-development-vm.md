@@ -16,6 +16,7 @@ tags: [pixel, virtualbox]
 2. create the nodeenv
 3. download dependencies from requirements.txt nodeenv --requirements=requirements.txt --jobs=4 env
 4. run npm install to get local dependencies
+5. [persistence](http://www.penguintutor.com/linux/rpi-pixel-virtualbox)
 
 ### Vim the text editor
 Vim is a lightweight, [ubiquitous][vim-download] text editor for code and text editing. It's pre-installed on the majority of *nix boxes and has bindings and commands to edit text efficiently. Using Vim proves useful when I'm working in multiple boxes throughout the day, i.e., connecting to servers to debug an issue or writing Python code in a virtual machine for school assignments.
