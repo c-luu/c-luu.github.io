@@ -122,5 +122,6 @@ This leaves us with one permutation of a unit test generated from this method.
 
 ### References
 * [GT Software Development Processes](https://classroom.udacity.com/courses/ud805/lessons/3626359166/concepts/5198585680923)
+
 [cartesian](https://en.wikipedia.org/wiki/Cartesian_product)
 
