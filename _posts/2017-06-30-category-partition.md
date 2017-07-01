@@ -23,7 +23,7 @@ Below, we have a self explanatory split method- how do we identify the partition
 split(string str, int size)
 {% endhighlight %}
 
-We _could_ identify input size as partitions, i.e.:
+We could identify input size as partitions, i.e.:
 * size < 0
 * size = 0
 * size > 0
@@ -123,5 +123,5 @@ This leaves us with one permutation of a unit test generated from this method.
 ### References
 * [GT Software Development Processes](https://classroom.udacity.com/courses/ud805/lessons/3626359166/concepts/5198585680923)
 
-[cartesian](https://en.wikipedia.org/wiki/Cartesian_product)
+[cartesian]:(https://en.wikipedia.org/wiki/Cartesian_product)
 
