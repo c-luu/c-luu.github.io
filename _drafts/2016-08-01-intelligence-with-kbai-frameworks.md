@@ -2,7 +2,7 @@
 layout: post
 title:  "Problem Solving Agents featuring Semantic Nets/ Generate & Test"
 date:   2016-08-01 23:17:12 +0000
-categories: [AI]
+categories: [ai]
 tags: [ai]
 ---
 
@@ -20,7 +20,7 @@ A visual-oriented way of measuring ones intelligence is through the Raven's Prog
 
 _Codifying_ the cognitive processes in which we solve Raven's Progressive Matrices will enable a deeper understanding of intelligence and the results may be extrapolated to visual spacial problems in different domains. 
 
-The end goal for this project is not to develop the best computer algorithm for the problem- it is to do so in a way that gives us insight into the way humans use intelligence and cognition to solve visuo-spatial problems.
+The end goal for this project is not to develop the best computer algorithm for the problem- it is to do so in a way that gives us insight into the way humans use intelligence and cognition to solve visual-spatial problems.
 
 ## Problem Overview
 The framework we delve into for knowledge representation will be Semantic Nets. For problem solving we discuss Generate and Test. 
@@ -58,10 +58,10 @@ The work flow for generating the Semantic Nets is the following:
 8. Test the _similarities_ between each transformation graph for the problem frames against each transformation graph with respect to frame x.
 
 #### Naive Strategy
-The initial strategy involves comparing the transformation weights from one transformation graph to the other. This excludes node simularities and specific transformation details- e.g., a shape transformation that begins as a very small square to a medium circle will be chalked up to a [_transformation_]. As an example, we take the graphs from steps 2 and 5 and generate a sequence of transformation labels respectively. If the labels from graph 2 contain $[add, add, unchanged]$, and the labels from graph 5 contain $[add, add]$, the score for this similarity would be the sum of matches between graph 2 and 5 divided by the total number of labels in graph 2.
+The initial strategy involves comparing the transformation weights from one transformation graph to the other. This excludes node similarities and specific transformation details- e.g., a shape transformation that begins as a very small square to a medium circle will be chalked up to a [_transformation_]. As an example, we take the graphs from steps 2 and 5 and generate a sequence of transformation labels respectively. If the labels from graph 2 contain [_add, add, unchanged_], and the labels from graph 5 contain [_add, add_], the score for this similarity would be the sum of matches between graph 2 and 5 divided by the total number of labels in graph 2.
 
 ### Robust Strategy
-The naive strategy was tested on simple problem sets, particularly ones without embedded shapes, successfully. For frames with $n$-objects, a more robust strategy is required. Namely, we need to compare the object relations, such as structure sequence and object counts, amongst the graphs. Secondly, we must account for transformations in _both_ directions, e.g., a small square to a large circle may have the following transformations:
+The naive strategy was tested on simple problem sets, particularly ones without embedded shapes, successfully. For frames with _n_-objects, a more robust strategy is required. Namely, we need to compare the object relations, such as structure sequence and object counts, amongst the graphs. Secondly, we must account for transformations in _both_ directions, e.g., a small square to a large circle may have the following transformations:
 
 1. "transformation, expansion"
 2. "transformation, shrink"
