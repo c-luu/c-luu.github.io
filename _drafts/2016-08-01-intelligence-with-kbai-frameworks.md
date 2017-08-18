@@ -17,6 +17,7 @@ Intelligence may be described as an ability to perceive some information and gen
 A visual-oriented way of measuring ones intelligence is through the Raven's Progressive Matrices test. It is a test in which the user examines a matrix of images, determines shape relationships and transformations amongst those objects, and picks the most likely answer from a set of images.
 
 ![Raven's Progressive Matrices](../_assets/intelligence-with-kbai-frameworks/assignment1-figure1.PNG)
+
 *Figure 1: Raven's Progressive Matrices*
 
 _Codifying_ the cognitive processes in which we solve Raven's Progressive Matrices will enable a deeper understanding of intelligence and the results may be extrapolated to visual spacial problems in different domains. 
