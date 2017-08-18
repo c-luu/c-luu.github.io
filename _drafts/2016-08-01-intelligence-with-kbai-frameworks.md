@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "Problem Solving Agents featuring Semantic Nets/ Generate & Test"
+date:   2016-08-01 23:17:12 +0000
+categories: [AI]
+tags: [ai]
+---
+
 ## Introduction
 The core of this project is to explore human cognition and intelligence through computing. This paper will discuss the development of agents that utilize theoretical frameworks encompassing Semantic Nets and Generate and Test in order to simulate human intelligence.
 
@@ -50,7 +58,7 @@ The work flow for generating the Semantic Nets is the following:
 8. Test the _similarities_ between each transformation graph for the problem frames against each transformation graph with respect to frame x.
 
 #### Naive Strategy
-The initial strategy involves comparing the transformation weights from one transformation graph to the other. This excludes node simularities and specific transformation details- e.g., a shape transformation that begins as a very small square to a medium circle will be chalked up to a $[transformation]$. As an example, we take the graphs from steps 2 and 5 and generate a sequence of transformation labels respectively. If the labels from graph 2 contain $[add, add, unchanged]$, and the labels from graph 5 contain $[add, add]$, the score for this similarity would be the sum of matches between graph 2 and 5 divided by the total number of labels in graph 2.
+The initial strategy involves comparing the transformation weights from one transformation graph to the other. This excludes node simularities and specific transformation details- e.g., a shape transformation that begins as a very small square to a medium circle will be chalked up to a [_transformation_]. As an example, we take the graphs from steps 2 and 5 and generate a sequence of transformation labels respectively. If the labels from graph 2 contain $[add, add, unchanged]$, and the labels from graph 5 contain $[add, add]$, the score for this similarity would be the sum of matches between graph 2 and 5 divided by the total number of labels in graph 2.
 
 ### Robust Strategy
 The naive strategy was tested on simple problem sets, particularly ones without embedded shapes, successfully. For frames with $n$-objects, a more robust strategy is required. Namely, we need to compare the object relations, such as structure sequence and object counts, amongst the graphs. Secondly, we must account for transformations in _both_ directions, e.g., a small square to a large circle may have the following transformations:
