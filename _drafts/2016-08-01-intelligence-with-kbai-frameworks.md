@@ -8,7 +8,7 @@ Intelligence may be described as an ability to perceive some information and gen
 
 A visual-oriented way of measuring ones intelligence is through the Raven's Progressive Matrices test. It is a test in which the user examines a matrix of images, determines shape relationships and transformations amongst those objects, and picks the most likely answer from a set of images.
 
-[Raven's Progressive Matrices](../_assets/intelligence-with-kbai-frameworks/assignment1-figure1.png)
+![Raven's Progressive Matrices](../_assets/intelligence-with-kbai-frameworks/assignment1-figure1.PNG)
 
 _Codifying_ the cognitive processes in which we solve Raven's Progressive Matrices will enable a deeper understanding of intelligence and the results may be extrapolated to visual spacial problems in different domains. 
 
@@ -19,7 +19,7 @@ The framework we delve into for knowledge representation will be Semantic Nets. 
 
 In general, to begin solving a knowledge based problem, the act of _knowledge representation_ is required. For this project we select Semantic Networks in order to describe the nodes, their relations to one another and transformations, and applied semantic meanings to said relations.
 
-[Semantic Network](../_assets/intelligence-with-kbai-frameworks/assignment1-figure2.png)
+![Semantic Network](../_assets/intelligence-with-kbai-frameworks/assignment1-figure2.PNG)
 
 After constructing said knowledge representation, we employ a framework, Generate and Test, to generate possible solutions based on the semantic net transformations and test them accordingly.
 
