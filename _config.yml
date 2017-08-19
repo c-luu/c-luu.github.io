@@ -18,7 +18,7 @@ title: c-luu
 email: luucody09@gmail.com
 description: A simple place to store my tech blogs.
 baseurl: "/c-luu.github.io" # the subpath of your site, e.g. /blog
-url: "c-luu.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "http://c-luu.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: cluu228
 github_username: c-luu
 linkedin_username: codyluu
