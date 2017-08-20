@@ -29,7 +29,7 @@ The framework we delve into for knowledge representation will be Semantic Nets. 
 
 In general, to begin solving a knowledge based problem, the act of _knowledge representation_ is required. For this project we select Semantic Networks in order to describe the nodes, their relations to one another and transformations, and applied semantic meanings to said relations.
 
-![Semantic Network](../_assets/intelligence-with-kbai-frameworks/assignment1-figure2.PNG)
+![Semantic Network]({{ site.url }}/assets/intelligence-with-kbai-frameworks/assignment1-figure2.PNG)
 
 *Figure 2: Semantic Network*
 
