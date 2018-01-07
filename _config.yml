@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 author: Cody Luu
 title: c-luu
-email: luucody09@gmail.com
+email: cluu30@gatech.edu
 description: A place to store blogs.
 #baseurl: "/c-luu.github.io" # the subpath of your site, e.g. /blog
 url: "http://c-luu.github.io" # the base hostname & protocol for your site, e.g. http://example.com
