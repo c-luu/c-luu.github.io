@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "SATisfiability & Validity"
+date:   2018-04-01 23:17:12 +0000
+categories: [ai]
+tags: [logic]
+---
+
 #### Determining Satisfiability and Validity
 
 ##### Truth Tables
