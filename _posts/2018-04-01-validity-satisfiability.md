@@ -12,7 +12,7 @@ tags: [logic]
 
 Let's try the example above as a truth table- remember, $F:P \wedge Q \to P \vee \neg Q$. **Is it valid?** If it's valid, $\forall I, I \vDash F$!
 
-| $$P$$  | $Q$  | $P \wedge Q$ | $\neg Q$ | $P \vee \neg Q$ | $F$  |
+| $P$  | $Q$  | $P \wedge Q$ | $\neg Q$ | $P \vee \neg Q$ | $F$  |
 | ---- | ---- | ------------ | -------- | --------------- | ---- |
 | 0    | 0    | 0            | 1        | 1               | 1    |
 | 0    | 1    | 0            | 0        | 0               | 1    |
