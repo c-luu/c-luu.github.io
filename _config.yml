@@ -25,7 +25,6 @@ linkedin_username: codyluu
 
 # Build settings
 #markdown: kramdown
-markdown: redcarpet
 theme: minima
 gems:
   - jekyll-feed
