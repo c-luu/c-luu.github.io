@@ -20,4 +20,6 @@ A high-level security architecture should be in place as early as possible in th
 * How said security requirements impact the development process.
 
 # Evolving Security Requirements
-It's ideal to have the security architecture specified early on, but how do we anticipate or prepare for future security requirements? 
+It's ideal to have the security architecture specified early on, but how do we anticipate or prepare for future security requirements? For one, _don't be overly specific about anticipating security enhancements_ (sic). E.g.:
+
+* Maybe we've added hooks to handle security checks, but such checks may introduce new possibilities of failures that the existing software can't handle.
