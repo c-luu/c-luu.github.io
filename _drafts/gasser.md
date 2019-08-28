@@ -35,3 +35,22 @@ Gasser claims that the __keys__ to incorporating security hooks for future secur
 _Evolving_ security requirements for a system could be impossible in some cases. For example, what if we have a system feature that allows anonymous, shared-access to a directory for temporary files. From a feature standpoint, it sounds reasonable and efficient use of resources, however it is also _fundamentally insecure_ since multiple users may read other users files in said directory.
 
 # Economy of Mechanism
+To achieve higher assurance in the architecture security, design the security-relevant modules such that _size and complexity_ is minimized.
+
+Gasser says that even if we stuck to this design principal, there may be diminishing returns of adding new security mechanisms. I.e., if the effort, size, and or complexity required to implement the new security feature requires _as much_ mechanisms already in place, the assurance and reliability is likely to not be commensurate.
+
+The goal to combat this is _economy of mechanism_, which is minimizing the variety security mechanisms. This forces security-relevant actions to be taken in a _few_ isolated sections.
+
+## Feasibility
+It largely depends on how flexible the system was designed. Historically, economy of mechanism is hard to attain due to how much security mechanisms _permeate_ the system. E.g., take the mechanism of _access of control_:
+
+* DBMS worries about access at the row level.
+* Message-handling systems worry about access at the message level.
+* Document-processing worries about whole file access.
+
+How would one isolate this mechanism when it's sprinkled throughout the system?
+
+## Going Overboard
+It's possible to take this principal to the extreme. For example, historically it made sense to store security attributes for files alongside other file attributes. If we instead _isolated_ these security attributes in a database, we'd potentially degrade security by adding on a synchronization mechanism.
+
+# Least Privilege
