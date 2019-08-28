@@ -54,3 +54,21 @@ How would one isolate this mechanism when it's sprinkled throughout the system?
 It's possible to take this principal to the extreme. For example, historically it made sense to store security attributes for files alongside other file attributes. If we instead _isolated_ these security attributes in a database, we'd potentially degrade security by adding on a synchronization mechanism.
 
 # Least Privilege
+> Subjects should have just enough privilege to do their jobs.
+
+The idea is very familiar- the valet can use the car keys since they need to park the car, but the car washer does _not_ need the car keys since they only wash it.
+
+Least privilege is used in computing, one example being kernel mode versus user mode. This example exhibits _coarse-grained_ privilege and suffers from an all-or-nothing state of possible privileges. Throwing in more privileges gives a more robust hierarchy of possible privileges to assign, but also requires more complex hardware or software support.
+
+An example of least privilege used in software system goes as follows: a file back-up daemon may have _read_ privileges on the files, but it shouldn't need _write_ privileges on said files to perform its job successfully. 
+
+# Friendliness
+Gasser recommends we keep these goals in mind as well:
+* Security shouldn't affect users obeying the rules.
+* It should be easy for users to _give_ access.
+* It should be easy for users to _restrict_ access.
+
+# Open Design
+> The safest assumption is that the penetrator knows everything.
+
+_Secrecy of design_ is not a requirement for even the most highly secure systems. No system will ever be free of covert channels, whether the design is privatized or open. Disclosing the design of the system's security mechanism __can improve security__ because its internals are scrutinized by a much larger audience.
