@@ -21,15 +21,13 @@ rvm group add rvm $USER
 #Install ruby
 rvm install ruby
 # Install Jekyll an any other gems. You can also swap this out for bundler.
-gem install jekyll, bundler
+gem install jekyll bundler
 
 # Create a new Jekyll site if one does not already exists
 cd /vagrant
-if [ ! -f jekyll/_config.yml ]; then
-	bundle exec jekyll new jekyll
-fi
+jekyll new myblog
 
 # Run Jekyll, accessible on the host machine
-cd jekyll
+cd myblog
 bundle install
 bundle exec jekyll serve --detach --host=0.0.0.0
