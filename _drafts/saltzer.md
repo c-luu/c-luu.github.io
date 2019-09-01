@@ -78,10 +78,19 @@ If we have a different mechanism for each type of subject or class of subjects w
 To routinely apply the security mechanisms correctly, the interface must be simple to use. If the user's _mental image_ of the protection goals matches the required mechanisms, mistakes will be minimized. If the security mechanism is very difficult or awkward to have a _mental image_ or abstraction of, it's easier for the user to misuse the mechanism, leading to potential security violations or attacks.
 
 # Imperfect Principles
-
 ## Work Factor
+> Compare the cost of circumventing the mechanism with the resources of the potential attacker.
+
+This _cost_ is known as the work factor, and can easily be calculated in some cases. For example, if our passwords can only be two alphabetic characters, that is `26^2` possible variations. An attacker with only a terminal and keyboard as resources has a _much higher work factor_, than an attacker with a computer capable of generating and automatically entering millions of passwords per second.
+
+Some troubles with this principle causing unreliable or difficult cost estimates:
+
+* Many protection mechanisms are __not__ conducive to work factor calculations.
+* Defeating such systems systematically may be _logically impossible_. 
+* Defeat is accomplished _indirectly_, such as waiting for hardware faults, or exploiting implementation errors.
 
 ## Compromise Recording
+Some arguments say that _recording_ a potential attack could be as strong as the mechanism preventing the attack. E.g., some systems log the date and entity that last accessed a record. If such log was tamper-proof, it could provide valuable data on the potential attacker. The reason this is _imperfect_ is that it's difficult to guarantee discovery once the security has been broken, e.g. attacker can undo the log.
 
 # References
 * [Examples of these principles in use](http://www.informit.com/articles/article.aspx?p=30487&seqNum=2)
