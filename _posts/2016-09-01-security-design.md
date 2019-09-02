@@ -168,7 +168,7 @@ Our only mechanism for access is one- simply having the sight open and accessibl
 If we have a different mechanism for each type of subject or class of subjects we have more access control flexibility and prevent security violations that'd occur if we only have one mechanism.
 
 # Defense in Depth
-I.e., having multiple layers of security. This can be demonstrated with the following thought exercise, referencing the [reflections on trusting trust]() paper.
+I.e., having multiple layers of security. This can be demonstrated with the following thought exercise, referencing the [reflections on trusting trust](https://www.archive.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf) paper.
 
 Lets say we're detecting potential compiler bugs or trojans. We'll accept the following assumptions as valid:
 
