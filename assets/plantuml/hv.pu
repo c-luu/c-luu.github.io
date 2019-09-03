@@ -1,0 +1,16 @@
+@startuml
+
+artifact Hardware {
+  artifact Hypervisor {
+    artifact Windows {
+      artifact App_a
+      artifact App_b
+    }
+    artifact Linux {
+      artifact App_c
+      artifact App_d
+    }
+  }
+}
+
+@enduml
