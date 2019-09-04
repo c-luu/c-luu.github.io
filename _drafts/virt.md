@@ -31,7 +31,7 @@ Not much as documented by _Xen's proof of construction_: 2,995 and 4,620 lines o
 
 ## Effort
 In order to achieve virtualization, we'll need to virtualize:
-* Memory heirarchy
+* Memory hierarchy
 * CPU
 * Devices
 
@@ -45,7 +45,28 @@ Nothing significant with a guest operating systems CPU, TLB, physically tagged c
 Remember that each process is under the illusion that its (virtual) memory elements are _contiguous_, when in reality they may be sparse in physical memory due to paging.
 
 ## Guest To Hypervisor Translation
-TODO: Discuss the mechanisms needed for this. Lectures 4-10.
+Each process in the guest VM has its own protection domain, and the guest VMs have distinct page tables they are aware of. 
+
+### Guest Physical Memory Illusion
+Let's say we have a Windows and Linux guest running on our hypervisor. The total physical memory that the Windows guest _thinks it has_ is $$[0, n]$$ and $$[0, m]$$ for the Linux guest.
+
+Both the guests may think they have _contiguous_ memory blocks, e.g.:
+
+$$R_1 = [0, q]$$ and $$R_2 = (q, n]$$ for Windows and $$R_1 = [0, l]$$ and $$R_2 = (l, m]$$ for Linux.
+
+
+However these blocks may be mapped to _non-contiguous_ blocks on actual, physical machine memory.
+
+### Shadow Page Tables (SPT) & Machine Page Numbers (MPN)
+In a non-virtualized setting, the page table is the _broker_ when the process requests a translation from a virtual page number to a physical page number. 
+
+Virtualized settings need __another level of indirection__ between the translation of the physical page number (PPN) and MPN: the SPT. 
+
+The separation of concerns is:
+* Guest PT translates VPN to PPN.
+* Hypervisor SPT translates PPN to MPN.
+
+![fullvirt-vpn-to-mpn]({{ site.url }}/assets/virt/fullvirt-vpn-to-mpn.PNG)
 
 # Dynamically Increasing Memory
 ## Naive Approach
@@ -58,6 +79,6 @@ TODO: Discuss the mechanisms needed for this. Lectures 4-10.
 ### Guest-oblivious Page Sharing
 #### Successful Match
 
-## Memory Allocation Polocies
+## Memory Allocation Policies
 
 # References
