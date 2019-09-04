@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+Process -> Guest: VPN Request
+Guest -> Guest: Page Table Lookup
+Guest -> Hypervisor: PPN Request
+note left: TLB miss.
+Hypervisor -> Hypervisor: Shadow Page Table Lookup
+Hypervisor -> Guest: MPN
+
+@enduml

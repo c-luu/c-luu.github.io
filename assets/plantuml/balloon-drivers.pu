@@ -1,0 +1,11 @@
+@startuml
+
+artifact Hardware {
+  artifact Hypervisor {
+    artifact Guest {
+      artifact "Balloon Driver"
+    }
+  }
+}
+
+@enduml
