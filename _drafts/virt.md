@@ -68,17 +68,81 @@ The separation of concerns is:
 
 ![fullvirt-vpn-to-mpn]({{ site.url }}/assets/virt/fullvirt-vpn-to-mpn.PNG)
 
-# Dynamically Increasing Memory
-## Naive Approach
+In T1 hypervisors, the SPT is managed by the hypervisor, but in T2 it could be managed in either the guest or hypervisor.
+
+In typical architectures, translating a virtual address (VA) is as follows:
+* CPU checks TLB (cache) to see if the VA has already been translated (hit).
+* If so, simply return the MPN (e.g. physical address) from cache.
+* Otherwise, we have to make a trip to memory and do a PT lookup.
+
+In the virtualization world, the SPT lookup is analogous to the PT lookup.
+
+### Efficient Mapping
+#### Full Virtualization
+It is more efficient for the hypervisor to _trap_ the guests PT lookup and have the hypervisor introspect its SPT for the translation. Now, we can translate a user-level processes VPN to MPN by just consulting the SPT. This can be accomplished by hypervisor mechanisms supported by TLBs and hardware page tables. VMwares ESX server implements this.
+
+#### Paravirtualization
+In this setup, the guest _knows_ about the hypervisor, so some of the burden of efficient mapping can be shifted to the guest. The PPN to MPN mapping is now _managed_ by the guest via the hypervisors _hypercall_ API.
+
+![hypercalls]({{ site.url }}/assets/virt/hypercalls.PNG)
+
+## Dynamically Increasing Memory
+How do does the hypervisor handle surges in memory consumption from the guests? Keep in mind that there's a cap on physical main memory that is potentially being shared among guest VMs.
+
+### Naive Approach
 > Rob Peter to pay Paul!
 
-## Coaxing Approach
-### Ballooning
+With this approach, the hypervisor forcibly steals a chunk of a guests _physical_ memory and grants it to another guest that is in need of more memory. This sudden drop of physical memory in the guest can lead to unexpected behavior on the guest.
+
+### Coaxing Approach (Ballooning)
+The novel idea here is the hypervisor installs a special device driver, called the balloon, into each guest OS:
+![balloon-drivers]({{ site.url }}/assets/virt/balloon-drivers.PNG)
+
+Now the hypervisor has a _private channel_ to each guest, via the balloon driver, to dynamically coax the guests to balloon or deflate their memory usage. 
+
+![ballooning]({{ site.url }}/assets/virt/ballooning.PNG)
 
 ## Sharing Memory Across Guests
+What if we have duplicate guest OS's that are running the same kind of user-level processes- can these guests share physical memory? 
+
+This can be achieved by mapping the duplicate guest OS page tables into the same MPN. This aids in avoiding duplication. 
+
+The hypervisor must have a mechanism where it can tell its guest VM which pages to mark as copy-on-write (COW)
+
+As soon as either guest OS needs to _write-to_ its shared page, the hypervisor can simply _copy_ the guest OS memory to another physical location. 
+
 ### Guest-oblivious Page Sharing
-#### Successful Match
+This method is used in VMwares ESX server. At a high level, it uses a structure called a _hint-frame_ with the following metadata:
+
+* Hash obtained from a guest VM page contents.
+* VM identifier.
+* PPN from the VM.
+* MPN from main, physical memory on the host.
+* Refs- a counter of how many VMs share this MPN.
+
+Although we have this _hint-frame_ data structure, we cannot rely on it to compare two physical pages from different VMs. To do so, we can use two matching hint-frames and do a full comparison. 
+
+If the full comparison results in a match, we:
+1. Increment `Refs` count to two in the hint-frame the two VMs are now sharing.
+2. We then mark the guest VMs pages as COW, so that their pages will map to a copied physical page on write in order to maintain integrity.
+3. Finally, we can free up one of the physical page frames.
+
+These mechanisms are ideally run as daemon processes. This approach is completely abstracted away from our guest VMs and applicable to full and paravirtualized hypervisors.
 
 ## Memory Allocation Policies
+### Pure Shared-Based
+> You get what you pay for.
+
+E.g., based on the SLA you have with some data center, they provide resources commensurate with the dollar amount you pay. A downside to this approach is _holding_- some VM could hog up the resources and not use them which could be a waste. 
+
+### Working-set (Elastic?)
+If the working-set of a VM increases, you give it more memory. If the working-set decreases, reclaim the memory for another VM. 
+
+### Combined (Dynamic Idle-adjusted Shares)
+> Tax idle pages more than active pages.
+
+If a VM has high memory utilization, good! Otherwise, its probably idling and should be taxed or penalized. This means we will slowly reclaim memory that the VM will probably not notice is gone anyways since it was idle.
+
+The tax-threshold set is up to the policy creator. E.g., say the threshold is 50%. If some VM is idle, then there's a 50% chance its memory will be taken away. Some middle-ground is probably the best approach.
 
 # References

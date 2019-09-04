@@ -1,0 +1,17 @@
+@startuml
+
+alt Hypervisor needs to grant memory to another process.
+    Hypervisor -> BalloonDriver: Inflate
+    BalloonDriver -> Guest: Force memory surge
+    hnote over Guest: Memory usage increases \nuntil page-out to disk
+    Guest --> Hypervisor: Return memory
+end
+alt Hypervisor has surplus memory to grant.
+    Hypervisor -> BalloonDriver: Deflate
+    BalloonDriver -> Guest: Decrease memory footprint
+    hnote over Guest: Ballooned process reduces\nmemory requirements which\nallows guest to request memory
+    Guest -> Guest: Page-in from disk
+    Hypervisor -> Guest: Supply memory
+end
+
+@enduml

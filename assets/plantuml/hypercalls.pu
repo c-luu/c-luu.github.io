@@ -1,0 +1,11 @@
+@startuml
+
+Guest -> Adapter: New PT request
+note over Adapter: Dashed arrows are hypercalls.
+Adapter --> Hypervisor: Create new PT in hardware
+Guest -> Adapter: Context switch
+Adapter --> Hypervisor: Switch PTs
+Guest -> Adapter: Handle page fault
+Adapter --> Hypervisor: Update PT according to page fault
+
+@enduml
