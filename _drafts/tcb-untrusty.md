@@ -86,6 +86,12 @@ Pages _also_ have protection levels, luckily only tracked in one bit- privileged
 
 Armed with _segment_ and _page_ protection levels, we are now armed to protect ranges of addresses in hardware!
 
-# M3L9
+# Changing Privilege Levels
+
+# Privileged Instructions
+
+# Hardware & OS Attacks
+
+# Memory Protection & Software Security
 
 # References
