@@ -12,8 +12,7 @@ A summary on required hard-ware support for a trusted-computing-base (TCB).
 1. Segmentation- Variable sized, logical units of an address space.
 2. Pages- The result of splitting up a segment. Is fix-sized.
 3. Logical address- E.g. virtual address. Consists of a segment number, page number, and page offset,
-4. Descriptor tables (DT)- E.g. page tables? Where a Global DT (GDT) is maintained by the TCB and Local DT (LDT) is maintained by each process.
-
+4. Descriptor tables (DT)- E.g. page tables? Where a Global DT (GDT) is maintained by the TCB and Local DT (LDT) is maintained by each user-process.
 
 # Isolation
 As noted in the TCB design principles summary, it is important that the TCB is _isolated_ from untrustworthy code. This can be achieved at a few levels in the system. 
@@ -31,6 +30,18 @@ Our TCB exists in the kernel space and will be shared among each user-level proc
 
 ![process]({{ site.url }}/assets/tcb-untrusty/process.png)
 
-[left off here](https://gatech.instructure.com/courses/73936/pages/topic-3-lecture-videos?module_item_id=379486)
+## Segment Tables
+These _seem_ like page tables. Segment tables contain records that hold where a logical address is mapped to in main memory. Given a logical address and the following:
 
+* Segment table base register (SGTBR)
+* Segment table entry (STE) 
+* STE size
+
+We can calculate the physical address:
+
+```c
+size_t physical_addr = *(SGTBR + STE * sizeof(STE)) + displacement;
+```
+
+[TODO: Lots of page table and translation to revisit here.](https://gatech.instructure.com/courses/73936/pages/topic-3-lecture-videos?module_item_id=379486)
 # References
