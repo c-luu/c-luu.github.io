@@ -56,7 +56,8 @@ Thought experiment 3 information could be here.
 There's a good chunk of sections here we need to widdle down and see what is needed per the thought experiments and summary requirements.
 
 # Virtualization Motivations
-3 examples.
+* Grouped physical servers may suffer from _under-utilization_, why not consolidate them as VMs on one server with little performance penalty?
+* Consolidating many servers into one can simply and reduce management cost.
 
 # References
 * [Xen and the Art of Virtualization](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
