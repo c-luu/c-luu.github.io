@@ -59,6 +59,14 @@ A few benefits are realized with clever use of these data structures:
 There's a lot of 'em. Page 3.
 
 ## Ballooning
+If ESX _reclaims_ memory from a guest VM, said guest should perform as if it had been initially _configured_ with less memory. Apparently this achieves predictable performance. 
+
+> ESX uses ballooning to achieve predictable performance by coaxing the OS into cooperating with it when possible.
+
+This requires a pseudo-device driver or kernel service that must be loaded into the guest OS at certain times. The guest cannot interact with the driver, only ESX may. When ESX wants more memory, it tells the driver to _inflate_ (the driver allocates _pinned physical pages_ within the VM). _Deflating_ is achieved by deallocating previously-allocated pages. 
+
+When inflating, the guest OS experiences increased memory pressure since the driver is allocating more pinned physical pages. This causes the guest OS to invoke native memory management algorithms.
+
 #### Ballooning in Xen (thought experiment)
 ## Demand Paging
 ## Mechanism Trade-offs
