@@ -63,16 +63,36 @@ If ESX _reclaims_ memory from a guest VM, said guest should perform as if it had
 
 > ESX uses ballooning to achieve predictable performance by coaxing the OS into cooperating with it when possible.
 
-This requires a pseudo-device driver or kernel service that must be loaded into the guest OS at certain times. The guest cannot interact with the driver, only ESX may. When ESX wants more memory, it tells the driver to _inflate_ (the driver allocates _pinned physical pages_ within the VM). _Deflating_ is achieved by deallocating previously-allocated pages. 
+This requires a pseudo-device driver or kernel service that must be loaded into the guest OS at certain times. The guest cannot interact with the driver, only ESX may. When ESX wants more memory, it tells the driver to _inflate_ (the driver allocates _pinned physical pages_ within the VM). _Deflating_ is achieved by de-allocating previously-allocated pages. 
 
-When inflating, the guest OS experiences increased memory pressure since the driver is allocating more pinned physical pages. This causes the guest OS to invoke native memory management algorithms.
+When inflating, the guest OS experiences increased memory pressure since the driver is allocating more pinned physical pages. This causes the guest OS to invoke native memory management algorithms. When memory is scarce, the VM has to reclaim space to satisfy the driver. The guest decides which pages to reclaim or pages out to virtual disk if necessary. The driver gives ESX each allocated, pinned PPNs, so that it can use it to reclaim its corresponding MPNs. 
+
+More details of what goes into ballooning:
+1. Driver causes PPN to balloon.
+2. ESX annotates its `pmap` entry.
+3. ESX de-allocates the associating MPN.
+4. ESX handles subsequent faults due to accesses to the PPN _that was annotated in step two?_
+5. At this point, the balloon has been _popped_, such that any interaction with the guest driver will reset its state.
+6. The fault is handled by allocating a new MPN back to the PPN.
+
+Otherwise, memory is abundant and it returns memory from its free list. 
+
+### Implementation
+1. Poll the server once per second in order to:
+2. Obtain a target balloon size.
+3. Allocation rates are adaptive to avoid stressing out the guest VM. 
+
+Standard kernel interfaces are used to allocate physical pages, such as `get_free_page()` in Linux and `MmProbeAndLockPages()` in Windows.
+
+Some down-sides of ballooning is having to install and uninstall it. Have the driver turned off during guest OS booting.
 
 #### Ballooning in Xen (thought experiment)
+
 ## Demand Paging
-## Mechanism Trade-offs
+Ballooning is used to optimize for the most common case. When it can't be used, ESX falls back to demand paging. The ESX swap daemon receives swap targets for each VM and coordinates async page-outs to an ESX server swap area. Randomized page replacement is used, a choice based on an expectation that this fall-back will not occur often.
 
 # Sharing Memory
-At least initially, just go over the concepts and _how they work_ in ESX. Hold off on implementation and performance graph analysis for now.
+What if the guest VMs run the same, or similar operating systems and processes? There is often such overlap, and ESX takes advantage of this so that server workloads running in VMs on a single machine are more memory efficient than if they were run on separate physical machines. This allows ESX to support higher levels of over-commitment.
 
 ## Transparent Page Sharing
 ## Content Page Sharing
