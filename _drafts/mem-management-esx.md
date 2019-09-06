@@ -21,6 +21,7 @@ This summary discusses memory management in VMware's ESX server and aims to comp
 5. Content-based page sharing & hot I/O page remapping- Exploits transparent page remapping to eliminate redundancy and reduce copy-overheads.
 6. Physical address- Software abstraction to provide the _illusion of hardware memory_ to a VM.
 7. Machine address- Actual hardware memory. __Remember: physical address is NOT the same as machine address, at least in this paper.__
+8. Copy on write (COW)- Writing to such shared page that is marked COW generates a fault that _generates a private copy._
 
 ## Initial Contrasts with Workstation
 As mentioned earlier, ESX is a thin software abstraction designed to _multiplex_ resources among VMs. Its design is a stark contrast to the Workstation product that utilizes a [hosted VM architecture]() to harness the pre-existing OS for portable I/O device support. This hosted architecture employed by the Workstation monitor has significantly lower I/O performance. 
@@ -95,7 +96,37 @@ Ballooning is used to optimize for the most common case. When it can't be used, 
 What if the guest VMs run the same, or similar operating systems and processes? There is often such overlap, and ESX takes advantage of this so that server workloads running in VMs on a single machine are more memory efficient than if they were run on separate physical machines. This allows ESX to support higher levels of over-commitment.
 
 ## Transparent Page Sharing
+It's common that VMs end up having identical pages of data, e.g. source code and read-only data. This redundant data could be consolidated to increase memory efficiency. If VMs x, y, and z have redundant _physical_ pages, ESX can map them to a _single_ machine page and mark it as COW. 
+
 ## Content Page Sharing
+> By definition, all potentially shareable pages can be identified by their contents.
+
+Other implementations of page sharing required modifying the guest OS- something ESX cannot do. ESX achieves this by scanning for potential sharing opportunities. Otherwise, a naive mechanism is needed to compare the content of _every page_ against _every other page_ in the system, which requires exponential time. ESX answers this with hashing.
+
+### Hashing
+We can avoid an exponential time page comparison with a hash table, where each entry might have a structure as such:
+
+```c
+struct cow_entry_t {
+    size_t hash_val;
+    char* contents;
+}
+```
+
+The hash table will only hold contents from a COW page. With this structure, we can hash _some_ of a pages contents to form a key in the hash table. Upon successful look-up, do a full comparison of the contents to determine if it is a complete match or not. The heuristic being:
+
+> If the hash_vals match, it's very likely their contents will as well.
+
+On a miss, we could mark the page in question as COW, presuming there will be a future match. There's a downside to doing this on misses- at worst case, every hash table lookup could potentially mark these pages as COW which will incur overhead.
+
+On a successful lookup and content comparison, we can reclaim the redundant page in question and use COW semantics to efficiently share the pages. Any _write_ attempts to this shared page generates a fault that creates a private page for the writer.
+
+# Shares and Working Sets
+While some systems tune memory allocation to improve some _aggregate_ measure, there is often a need to go for a less _fairness_-based approach. In some settings, some VMs should be prioritized over others due to pricing tiers, administrative groups, etc. ESX claims to incorporate this _VM penalization_ while not sacrificing isolation and memory performance. 
+
+## Share-Based Allocation
+
+# Reclaiming Idle Memory
 
 # Allocation Policies
 ## Parameters
