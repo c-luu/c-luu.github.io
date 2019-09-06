@@ -22,9 +22,11 @@ This summary discusses memory management in VMware's ESX server and aims to comp
 6. Physical address- Software abstraction to provide the _illusion of hardware memory_ to a VM.
 7. Machine address- Actual hardware memory. __Remember: physical address is NOT the same as machine address, at least in this paper.__
 8. Copy on write (COW)- Writing to such shared page that is marked COW generates a fault that _generates a private copy._
+9. Shares- Resource rights owned by resource consumers. Share collection is proportional to allowed resource consumption.
+10. Performance isolation- Throttling performance (e.g., memory availability) on client VMs based on variables such as how much the client is paying to use the service for example.
 
 ## Initial Contrasts with Workstation
-As mentioned earlier, ESX is a thin software abstraction designed to _multiplex_ resources among VMs. Its design is a stark contrast to the Workstation product that utilizes a [hosted VM architecture]() to harness the pre-existing OS for portable I/O device support. This hosted architecture employed by the Workstation monitor has significantly lower I/O performance. 
+As mentioned earlier, ESX is a thin software abstraction designed to _multiplex_ resources among VMs. Its design is a stark contrast to the Workstation product that utilizes a [hosted VM architecture](https://en.wikipedia.org/wiki/Hypervisor#Classification) to harness the pre-existing OS for portable I/O device support. This hosted architecture employed by the Workstation monitor has significantly lower I/O performance. 
 
 ### Handling Nested System Calls
 > How do the two monitors handle system calls from a user process inside of the VM?
@@ -52,12 +54,13 @@ A few benefits are realized with clever use of these data structures:
 * ESX can remap a _physical_ page by changing its PPN to MPN mapping. 
 * ESX can monitor or interpose on guest memory accesses.
 
-## Contrasts with Xen
-???
-
 # Reclamation Mechanisms
 ## Page Replacement Issues
-There's a lot of 'em. Page 3.
+The benefits of _over-committing_ virtualization system configurations does come with a few meta-problems. ESX has to decide how to give and take memory from what VM to another. In a typical OS, this is already solved with paging.
+
+In aggregate, these guests are actually paging out to their _illusions_ of physical memory, which crosses into the monitor boundary. A naive solution is to take the same paging logic and apply it at the monitor level as well, a.k.a. meta-level page replacement.
+
+This isn't ideal since the monitor must guess which VM to target for paging, but also which pages are _least valuable_ within the VM to page. The guest OS is the entity that really knows which of its pages are least valuable.
 
 ## Ballooning
 If ESX _reclaims_ memory from a guest VM, said guest should perform as if it had been initially _configured_ with less memory. Apparently this achieves predictable performance. 
@@ -88,6 +91,7 @@ Standard kernel interfaces are used to allocate physical pages, such as `get_fre
 Some down-sides of ballooning is having to install and uninstall it. Have the driver turned off during guest OS booting.
 
 #### Ballooning in Xen (thought experiment)
+TODO: Come back after reading the Xen paper to see how ballooning could be achieved there.
 
 ## Demand Paging
 Ballooning is used to optimize for the most common case. When it can't be used, ESX falls back to demand paging. The ESX swap daemon receives swap targets for each VM and coordinates async page-outs to an ESX server swap area. Randomized page replacement is used, a choice based on an expectation that this fall-back will not occur often.
@@ -125,14 +129,74 @@ On a successful lookup and content comparison, we can reclaim the redundant page
 While some systems tune memory allocation to improve some _aggregate_ measure, there is often a need to go for a less _fairness_-based approach. In some settings, some VMs should be prioritized over others due to pricing tiers, administrative groups, etc. ESX claims to incorporate this _VM penalization_ while not sacrificing isolation and memory performance. 
 
 ## Share-Based Allocation
+ESX uses the _min-funding revocation replacement algorithm that selects a _victim_ VM, relinquishes its previously allocated space, and gives it to an in-demand client. The victim client is usually one with lower shares per allocated page.
+
+> Shares-per-page ratio is like price; revocation allocates memory away from cheap clients to higher paying clients.
 
 # Reclaiming Idle Memory
+> The goals of performance isolation and efficient memory utilization often conflict.
+
+If a client with more shares starts idling, it begins hoarding memory at the cost of lower-share clients that are active. ESX handles this problem by taxing the former client.
+
+## Idle Memory Tax
+The idea is to charge a client _more_ for idle pages it uses than for one it is actively using. This gives the desired dynamics:
+
+> If memory is scarce, prefer to reclaim pages from clients not using their full allocations.
+
+The tax rate is the maximum fraction of idle pages ESX can reclaim from a client. When a client starts using more of its allocated memory, its allocation will grow commensurate to its shares. See formula in section 5.2. 
+
+### Measuring
+ESX measures idle memory by using sampling techniques. For each VM, and given a sampling period defined in units of VM execution time:
+
+1. Randomly select _n_ physical pages from the VM.
+2. Track these pages by invalidating their mappings to their PPN.
+3. Now, subsequent accesses from the guest OS will be intercepted by ESX, which increments touched page counter _t_. 
+4. At the end of sampling, we now have $$t/n$$, estimating the fraction of actively accessed memory.
 
 # Allocation Policies
-## Parameters
+ESX admins control VM memory allocation using three variables:
+
+1. Minimum size
+2. Maximum size
+3. Memory shares
+
+Minimum size is the _guaranteed_ minimum amount of memory allocated to a VM, even in over-committed configurations. Maximum size is the amount of _physical_ memory allotted to a guest OS running in the VM. Unless over-committed, VMs will be allotted their max size.
+
+A VM with twice as many memory shares as another is _entitled_ to consume twice as much memory, assuming they're both using their allocated memory. This entitlement is subject to the configured minimum and maximum size.
+
+## Admission Control Policy
+This ensures the following categories are available before the VM powers on:
+* Unreserved memory
+* Server swap space
+
+Minimum plus _overhead_ memory is guaranteed to the VM, where overhead constitutes `pmap` and shadow page table structures, and things like graphic buffers, to support virtualization.
+
+Disk swap space is reserved for the remaining VM memory, calculated as maximum minus minimum memory. 
+
 ## Dynamic Reallocation
-### Metrics
-Insert and discuss results.
+Sometimes ESX has to recompute memory allocations due to events such as:
+
+* System-wide allocation parameters changed.
+* VM allocation parameters changed.
+* VMs entering or leaving the ecosystem.
+
+Typically operating systems maintain a _minimum_ of free memory, e.g. 5%. If memory falls below, reclamation begins until a threshold of 7% is crossed.
+
+ESX has four thresholds:
+
+* High- Memory is sufficient, don't reclaim memory. 
+* Soft- Balloon driver kicks in.
+* Hard- Paging algorithm kicks in.
+* Low- Continue paging until VMs that are _above_ their target allocations are blocked.
+
+In order to reclaim memory, ESX computes target allocations for VMs to drive aggregate free space above the _high_ threshold. ESX uses a _laddering_ mechanism for crossing thresholds to prevent rapid state fluctuation. I.e., the threshold can promote or demote to the levels directly below or below it based on meeting the threshold criteria, no level jumping is allowed.
+
+# I/O Page Remapping
+High-end systems sometimes keep a separate I/O MMU to remap memory for data transfers. In such systems, when I/O involving _high memory_ crosses a threshold, say four gigabytes, it's copied into a temporary _bounce buffer_ in _low_ memory.
+
+Virtualization exacerbates this because the _physical_ memory of a VM could be mapped to machine pages in _high_ memory. Since ESX uses translation indirection, it can remap the guest pages between low and high memory.
+
+ESX will track _hot pages_ in high memory with a history of high I/O, such as network transmits. It can augment the PPN to MPN software cache to count each page copy. Once the count has crossed a threshold, ESX transparently remaps it to low memory.
 
 # References
 * [Memory Resource Management in VMware ESX Server](http://www.waldspurger.org/carl/papers/esx-mem-osdi02.pdf)
