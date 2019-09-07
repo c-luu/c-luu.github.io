@@ -21,7 +21,7 @@ There's a few challenges when partitioning a machine to support concurrently exe
 
 Unlike their competitor, VMware's ESX for example, Xen requires a guest VM, e.g. XenoLinux, to sit between the monitor and guest operating systems. It exports an ABI identical to a non-virtualized Linux OS.
 
-# Paravirtualization
+## Full Virtualization Woes
 A traditional monitor exposes a _virtual_ hardware interface that is _functionally identical_ to the underlying machine. Full virtualization provides the benefit of not having to modify the guest OS binaries, however there's a few drawbacks, if x86:
 
 * Full virtualization support was never apart of x86 architecture design.
@@ -31,6 +31,15 @@ A traditional monitor exposes a _virtual_ hardware interface that is _functional
 E.g., the ESX server dynamically rewrites some of the hosted machine code to insert traps when monitor intervention is needed. Since all non-trapping privileged instructions must be caught and handled, this dynamic translation is applied to the entire guest. This results in high-cost, update-intensive operations such as creating a new application process.
 
 Xen avoids the drawbacks of full virtualization by providing a monitor that is _similar_ to the underlying hardware- paravirtualization. 
+
+# Paravirtualization
+A drawback of this approach is requiring modifications to the to the guest OS, but not guest applications due to leaving the ABI pristine. 
+
+Xen paravirtualization is summed into these few design principles:
+1. Users won't use Xen if ABI modification is required.
+2. Need to support complex server configs _in a single guest OS instance_ to support multi-application operating systems.
+3. Can't have high-performance and strong resource isolation on x86 unless you paravirtualize.
+4. __Completely__ hiding resource virtualization effects from the guest operating systems is risking correctness and performance.
 
 # VM Interface
 ## Memory Management
