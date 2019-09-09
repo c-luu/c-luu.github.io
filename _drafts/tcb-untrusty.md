@@ -49,7 +49,7 @@ size_t physical_addr = *(SGTBR + STE * sizeof(STE)) + displacement;
 [TODO: Lots of page table and translation to revisit in M3L4, although the professor did mention the low level details is not important in office hours (verify this).](https://gatech.instructure.com/courses/73936/pages/topic-3-lecture-videos?module_item_id=379486)
 
 # x86 Memory Protection Bits
-Segments in the segment table have _protection_ bits. The _segment selector data structure_, which is used early in the address translation prodcess has the following properties:
+Segments in the segment table have _protection_ bits. The _segment selector data structure_, which is used early in the address translation process has the following properties:
 
 * Index field
 * TI (GDT or LDT)- a bit indicating which descriptor table to use.
@@ -75,18 +75,24 @@ In the first example, `max(3, 3) <= 3`, so we can only perform the access if the
 In the second example, we are currently at kernel level, but the request wants to access at user level. Since user level is larger in value than kernel, we choose this when determining if we can access the target DPL, i.e., this prevents __privilege escalation__, and increases protection and unintended privileged access,
 
 # Conforming & Non-conforming Code
-TODO: Need to revisit this, maybe from a separate paper.
-
 The gist here is not all code accesses data, but may need to operate at DPL 0, an example is exception handling. This is considered _conforming_ code.
 
-# Page Protection Levels
-Pages _also_ have protection levels, luckily only tracked in one bit- privileged or non-privileged. 
+## Non-conforming
+When accessing non-conforming code segments, the CPL of the calling procedure must be __equal__ to the DPL of the destination code segment.
+
+## Conforming
+CPL of the calling procedure must be numerically greater or equal to (less privileged) than the DPL of the destination code segment.
+
+# Page Protection/ Privilege Levels
+Pages also have protection levels, luckily only tracked in one bit- privileged or non-privileged. 
 
 > If your CPL is 3 (user mode), you can only access pages at protection level 1.
 
-Armed with _segment_ and _page_ protection levels, we are now armed to protect ranges of addresses in hardware!
+Armed with _segment_ and _page_ protection levels, we are now armed to protect ranges of addresses in hardware
 
 # Changing Privilege Levels
+## Control Gates
+Facilitates controlled transfers of program control between different privilege levels.
 
 # Privileged Instructions
 
@@ -95,3 +101,4 @@ Armed with _segment_ and _page_ protection levels, we are now armed to protect r
 # Memory Protection & Software Security
 
 # References
+[Intel 64 & IA-32 Software Manual](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-system-programming-manual-325384.pdf)
